@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
-In this markdown I illustrate the data generation procedure in Section 5.
+In this markdown I illustrate the data generation procedure in Section 6.
 
 The original data used to construct the HMM can be loaded as following: you can also download it from `SNPknock` package version 0.7.1 at `extdata/genotypes.RData`.
 
