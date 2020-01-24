@@ -14,7 +14,7 @@ par(mar=c(3,3,2,1), mgp=c(1.5,0.5,0))
 logistic <- function(t) 1/(1+exp(-t))
 ```
 
-We simulate a small dataset containing 400 observations $(X_i,Y_i)$, where each row of the covariates $X_i\in\mathbb{R}^{80}$ are independently sampled from a multivariate Gaussian $X_i\sim\mathcal{N}(0, \Sigma)$. $\Sigma$ is that of an $AR(1)$ model with correlation $\rho = 0.8$,i.e.
+We simulate a small dataset containing 400 observations $(X_i,Y_i)$, where each row of the covariates $X_i\in\mathbb{R}^{80}$ are independently sampled from a multivariate Gaussian $X_i\sim\mathcal{N}(0, \Sigma)$. $\Sigma$ is that of an $AR(1)$ model with correlation $\rho = 0.2$,i.e.
 \[
 \Sigma_{ij} = \rho^{|i-j|}.
 \]
