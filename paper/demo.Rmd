@@ -75,7 +75,7 @@ where $\tau_j = \mathrm{Var}(X_{ij}\,|\,X_{i,-j})$, should cover the true coeffi
 ```{r}
 # calculated parameters in this example
 alpha_s <- 1.36
-sigma_s <- 3.64
+sigma_s <- 3.66
 lambda_s <- 1.98
 ```
 
