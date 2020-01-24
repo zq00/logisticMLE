@@ -1,6 +1,6 @@
 #genetic example
 library(SNPknock)
-load('/genetics/param/hmm.RData')
+load('/genetics/create_model/hmm.RData')
 
 # -- Job submission arguments
 args = commandArgs(trailingOnly=TRUE)
