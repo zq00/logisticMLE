@@ -117,10 +117,10 @@ ggsave(filename, plot = g_pval_tr, device = "png",
 p.val = pchisq(dev * hat_lambda / kappa / hat_sigma^2, df = 1, lower.tail=FALSE)
 
 # table 7 column 3
-mean(p.val<=0.1)*100; sqrt(mean(p.t<=0.1)*(1-mean(p.val<=0.1))/B)*100
-mean(p.val<=0.05)*100;sqrt(mean(p.t<=0.05)*(1-mean(p.val<=0.05))/B)*100
-mean(p.val<=0.01)*100;sqrt(mean(p.t<=0.01)*(1-mean(p.val<=0.01))/B)*100
-mean(p.val<=0.001)*100;sqrt(mean(p.t<=0.001)*(1-mean(p.val<=0.001))/B)*100
+mean(p.val<=0.1)*100; sqrt(mean(p.val<=0.1)*(1-mean(p.val<=0.1))/B)*100
+mean(p.val<=0.05)*100;sqrt(mean(p.val<=0.05)*(1-mean(p.val<=0.05))/B)*100
+mean(p.val<=0.01)*100;sqrt(mean(p.val<=0.01)*(1-mean(p.val<=0.01))/B)*100
+mean(p.val<=0.001)*100;sqrt(mean(p.val<=0.001)*(1-mean(p.val<=0.001))/B)*100
 
 #figure 4 (c):empirical cdf of adjusted p-values
 ecdf_p = data.frame(cbind(sort(p.val,decreasing=FALSE),(seq(1,length(p.val),1)/(length(p.val)+1))))
