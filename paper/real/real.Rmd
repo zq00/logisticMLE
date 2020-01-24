@@ -17,7 +17,7 @@ library(lpSolve)
 ```
 
 ```{r, include= FALSE}
-# global theme for plots
+# Global theme
 my_theme <- theme(
   axis.text.x = element_text(color = "grey10", size = 12),
       axis.text.y = element_text(color = "grey10", size = 12),
@@ -82,7 +82,8 @@ n <- dim(wine)[1] # number of observations
 fit_full <- glm(quality~., data = wine, family = binomial(link = "logit"))
 beta <- fit_full$coef
 ```
-### MLE on sub-samples 
+
+### MLE in sub-samples 
 
 Focus on the variable - volatile acidity
 
@@ -140,7 +141,7 @@ apply(mle, 2, median)/beta[3]
 
 ### Plots - fitted coefficients
 
-Boxplot of the fitted coefficients
+We make boxplot of the fitted MLE of $\hat{\beta}_{\mathrm{vc}}$ at the sequence of $\kappa$ values, and compare it with the large sample estimate using full data.  
 
 ```{r}
 boxdata <- tibble(
@@ -187,9 +188,9 @@ g_coef <- g_coef +
 g_coef
 ```
 
-Saving figure
-```{r}
-filename <- "/real/figure/g_coef.png"
+```{r,eval = FALSE, echo = FALSE}
+# Save figure
+filename <- "/Users/zq/Dropbox/logistic_cov/LogisticCov_v4/real/fig/g_coef.png"
 ggsave(filename, plot = g_coef, scale = 1, width = 5, height = 3, units = "in", dpi = 300) 
 ```
 
@@ -224,7 +225,9 @@ for(i in 1:length(kappas)){
 }
 ```
 
-### Plots - standard error
+### Standard error plot
+
+We plot the "actual" standard error of the MLE $\hat{\beta}_{\mathrm{vc}}$ estimated by randomly partitioning the data (red points), and compare them with estimates from inverse Fisher information, by either taking the expected values (Figure 7a), or plug in empirical Fisher information (Figure 7b, same as glm function output).
 
 ```{r}
 g_sd_r <- ggplot()+
@@ -266,12 +269,13 @@ g_sd_fisher <- ggplot()+
 g_sd_fisher
 ```
 
-Save Figure
 
-```{r}
-filename <- "/real/fig/g_sd_r.png"
+```{r, eval = FALSE, echo = FALSE}
+# Save Figure
+filename <- "/Users/zq/Dropbox/logistic_cov/LogisticCov_v4/real/fig/g_sd_r.png"
 ggsave(filename, plot = g_sd_r, device = "png", scale = 1, width = 4, height = 3, units = "in", dpi = 300) 
 
-filename <- "/real/fig/g_sd_fisher.png"
+filename <- "/Users/zq/Dropbox/logistic_cov/LogisticCov_v4/real/fig/g_sd_fisher.png"
 ggsave(filename, plot = g_sd_fisher, device = "png", scale = 1, width = 4, height = 3, units = "in", dpi = 300) 
 ```
+
