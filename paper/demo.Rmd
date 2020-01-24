@@ -1,5 +1,5 @@
 ---
-title: "Logistic male"
+title: "Logistic MLE"
 author: "Qian Zhao"
 date: "1/23/2020"
 output: html_document
