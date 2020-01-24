@@ -109,11 +109,12 @@ sd_fisher <- numeric(length(kappas)) # inverse Fisher info, plug in beta_hat fro
 
 for(i in 1:length(kappas)){
   nn <- round(p/kappas[i])
+  emp <- matrix(0, p+1, p+1) # empirical Fisher information matrix
+  
   b <- 1
   while(b<=B){ # retain values when the data is not separable
      data <- wine[sample(1:n, nn, replace = TRUE), ]
      
-     emp <- matrix(0, p+1, p+1) 
      if(!is.separable(as.matrix(data[,-12]), data[,12])){
          fit <- glm(quality~., data = data, family = binomial(link = "logit"))
          mle[b,i] <- coef(fit)[v+1] # fitted coefficient
@@ -128,7 +129,7 @@ for(i in 1:length(kappas)){
      }
   }
      avg=emp/B
-     sd_fisher[i]=sqrt(solve(avg)[v+1,v+1])
+     sd_fisher[i]=sqrt(solve(avg)[v+1,v+1])* sqrt(nn) # standard error from Fisher info, adjusted by sample size 
 }
 ```
 
