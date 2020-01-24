@@ -1,0 +1,111 @@
+---
+title: "Logistic male"
+author: "Qian Zhao"
+date: "1/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+par(mar=c(3,3,2,1), mgp=c(1.5,0.5,0))
+```
+
+```{r, echo = FALSE}
+logistic <- function(t) 1/(1+exp(-t))
+```
+
+We simulate a small dataset containing 400 observations $(X_i,Y_i)$, where each row of the covariates $X_i\in\mathbb{R}^{80}$ are independently sampled from a multivariate Gaussian $X_i\sim\mathcal{N}(0, \Sigma)$. $\Sigma$ is that of an $AR(1)$ model with correlation $\rho = 0.8$,i.e.
+\[
+\Sigma_{ij} = \rho^{|i-j|}.
+\]
+The response variable $Y_i$ is related to $X_i$ via a logistic model 
+\[
+Y_i\,|\, x_i\sim \mathrm{Bernoulli}(\mathrm{logistic}(X_i^\top \beta)),
+\]
+$\mathrm{logistic}(t) = 1/(1+e^{-t})$.  Here, we choose coefficients $\beta_i$ such that half of them are zero and the other half are equal with magnitude 0.2 (signal strength parameter $\gamma = 1.42$). 
+
+```{r}
+n <- 400
+p <- 80
+kappa <- p/n
+
+Sigma <- toeplitz(0.2^(0:(p-1))) # covariance matrix
+R <- chol(Sigma)
+
+non_null <- sample(1:p, p/2, replace = FALSE) 
+beta <- numeric(p)
+beta[non_null] <- 0.2
+```
+
+### Logistic MLE
+
+Let's look at the distribution of a single MLE $\hat{\beta}_{j}$ by repeated sampling. 
+
+```{r}
+B <- 1000
+betas <- matrix(0, B, p)
+
+for(i in 1:B){
+  X <- matrix(rnorm(n*p, 0, 1), n, p)  %*% R
+  Y <- rbinom(n, 1, logistic(X%*%beta))
+  fit <-  glm(Y~X+0, family = binomial)
+  betas[i,] <- coef(fit)
+}
+```
+
+Plot a histogram of the fitted in all these repetitions. The estimated MLE is not centered at the true $\beta_j$ (red line), instead, it is biased upward in magnitude. 
+
+```{r}
+j <- sample(non_null,1)
+hist(betas[,j], xlab = "Fitted MLE", main = "")
+abline(v = beta[j], lty = "dashed", col = "red", lwd = 2)
+abline(v=1.36*beta[j], lty = "dashed", col = "blue", lwd = 2)
+```
+
+The blue line plots $\alpha_\star\beta_j$, $\alpha_\star = 1.36$ is the predicted bias from the asymptotic theory. It is roughly at the center of all the fitted MLEs.
+
+### Confidence intervals 
+
+According to the asymptotic theory, the confidence intervals of the form 
+\[
+\left[\frac{1}{\alpha_\star}\left(\hat{\beta}_j - \frac{\sigma_\star}{\sqrt{n}\tau_j}z_{(1-\alpha/2)}\right),\frac{1}{\alpha_\star}\left(\hat{\beta}_j + \frac{\sigma_\star}{\sqrt{n}\tau_j}z_{(1-\alpha/2)}\right)\right]
+\]
+where $\tau_j = \mathrm{Var}(X_{ij}\,|\,X_{i,-j})$, should cover the true coefficient $\beta_j$ about $(1-\alpha)$ of the times. The pair of parameters $(\alpha_\star, \sigma_\star, \lambda_\star)$ solves a system of non-linear equations detailed in the paper (see also Sur (2019)). 
+
+```{r}
+# calculated parameters in this example
+alpha_s <- 1.36
+sigma_s <- 3.64
+lambda_s <- 1.98
+```
+
+For this example, we can compute the conditional variance $\tau_j$ explicitely because the covariance matrix is known.
+
+```{r}
+tau <- 1/sqrt(diag(solve(Sigma)))
+```
+
+As an illustration, we compute a 90\% confidence interval each time, thus altogether there are $B$ confidence intervals.  
+
+```{r}
+# adjusted 90% confidence interval 
+ci.low <- (betas + sigma_s / sqrt(n) / matrix(rep(tau, n), B, p, byrow = TRUE) * qnorm(0.05))/alpha_s
+ci.up <-  (betas + sigma_s / sqrt(n) / matrix(rep(tau, n), B, p, byrow = TRUE)  * qnorm(0.95))/alpha_s
+```
+
+First, let's look at how often the $j$th variable is covered. 
+
+```{r}
+mean((beta[j]> ci.low[,j]) & (beta[j]< ci.up[,j])) 
+```
+
+Then, we compute the average coverage proportion in each repetition and report the average in $B$ repetitions. Both are quite close to 90\%. 
+
+```{r}
+mean((matrix(rep(beta, n), B, p, byrow = TRUE) > ci.low) & (matrix(rep(beta, n), B, p, byrow = TRUE) < ci.up)) 
+```
+
+### Further Reference
+Pragya Sur and Emmanuel J. Candès, "A modern maximum-likelihood theory for high-dimensional logistic regression", *Proceedings of the National Academy of Sciences* Jul 2019, 116 (29) 14516-14525; DOI: 10.1073/pnas.1810420116
+
+
