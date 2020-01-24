@@ -69,12 +69,10 @@ for(i in 1:n_kappa){
 	if(pi_hats[i]>=0.5){
 		stop = TRUE; #put a flag that have found kappa                  
 
-		kappa_n = seq(kappas[i]-0.01, kappas[i], by=0.001) #check more values
+		kappa_n = seq(kappas[i]-0.01, kappas[i], by=0.001) # check more values
 		pi_n = numeric(length(kappa_n))
 
-		#nov.18
-		#better control
-		pi_n[1] = pi_hats[i-1]; pi_n[length(kappa_n)] = pi_hats[i]
+		pi_n[1] = pi_hats[i-1]; pi_n[length(kappa_n)] = pi_hats[i] # fix separable proportion at the two endpoints 
 		kappa_hat = kappas[i];
 
 		for(j in 2:(length(kappa_n)-1)){
@@ -95,7 +93,6 @@ for(i in 1:n_kappa){
 			print(c(pi_n[1:j]));
 		if(pi_n[j]>=0.5){
 				kappa_hat = kappa_n[j-1] + (0.5 - pi_n[j-1])/(pi_n[j] - pi_n[j-1]) * (kappa_n[j] - kappa_n[j-1]);
-				#kappa_hat = kappa_n[j];
 				print(paste0("have found kappa_hat ",kappa_hat));break;
 			}
 		}
