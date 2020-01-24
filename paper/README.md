@@ -6,4 +6,4 @@ Each directory corresponds to code and output in one section. All the files are 
 - **output**: raw output. Sometimes the outputs are splitted to conform to size restriction
 - **results**: R code to analyze results and produce table/figure.
 
-A r package that streamlines procedures described in the paper to adjust high-dimensional logistic MLE is still under construction. In the meantime, if you are interested in the phenomenon, *to add* provides a quick demonstration. You can also look at the example data analysis in **real**. 
+A r package that streamlines procedures described in the paper to adjust high-dimensional logistic MLE is still under construction. In the meantime, if you are interested in the phenomenon, *to add* provides a quick demonstration. You can also look at the example data analysis in */real* folder. 
