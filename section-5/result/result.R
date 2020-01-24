@@ -16,7 +16,7 @@ lambda_s = 3.0269
 
 #-- true parameters
 jnull <- scan('/section-5/param/jnull.txt')
-non_null <- scan('/section-5/param//non_null.txt')
+non_null <- scan('/section-5/param/non_null.txt')
 
 
 #-- obtain beta
