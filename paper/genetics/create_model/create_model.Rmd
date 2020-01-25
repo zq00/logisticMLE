@@ -1,0 +1,62 @@
+---
+title: "Create models"
+author: "Qian Zhao"
+date: "11/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+This markdown illustrates the data generation procedure in Section 6.
+
+```{r, load_library}
+library(SNPknock)
+```
+
+The original data used to construct the HMM can be loaded as follows. You can also download it from `SNPknock` package version 0.7.1 at `extdata/genotypes.RData`.
+
+```{r}
+load("./genotypes.RData")
+table(X)
+```
+
+Convert X into the suitable fastPHASE input format, write it into a temporary file and return the path to that file.
+
+```{r}
+Xinp_file <- writeXtoInp(X)
+```
+
+Run fast phase on this synthetic dataset
+
+```{r}
+fp_path  = "./fastPHASE_1" # Path to the fastPHASE executable
+fp_outPath = runFastPhase(fp_path, Xinp_file, K = 12, numit = 15)
+
+r_file = paste(fp_outPath, "_rhat.txt", sep="")
+alpha_file = paste(fp_outPath, "_alphahat.txt", sep="")
+theta_file = paste(fp_outPath, "_thetahat.txt", sep="")
+char_file  = paste(fp_outPath, "_origchars", sep="")
+
+hmm <- loadHMM(r_file, alpha_file, theta_file, char_file, phased=FALSE, compact = TRUE)
+
+# save R object 
+# save(hmm, hmm, file = "./hmm.RData")
+```
+
+Alternatively, you can load the file that has been written.
+
+```{r}
+load("./hmm.RData")
+```
+
+Sample from the HMM 
+
+```{r}
+X = sampleHMM(hmm$pInit, hmm$Q, hmm$pEmit, n=5000)
+dim(X)
+```
+
+
+
