@@ -1,5 +1,5 @@
 # Section 7.1.1. Finite sample accuracy
-# Results in Table 10, 11, 12 and supplementary material Table 1 - 3
+# Results in Table 10 (I), 11 (I) and supplementary material Table 1 - 3
 library(tidyverse)
 library(glmhd)
 
