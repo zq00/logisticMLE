@@ -3,15 +3,7 @@
 library(tidyverse)
 library(glmhd)
 
-# -- global theme for plots 
-my_theme <- theme(axis.text.x = element_text(color = "grey10", size = 12),
-                  axis.text.y = element_text(color = "grey10", size = 12),
-                  axis.title.x = element_text(color = "black", size = 15),
-                  axis.title.y = element_text(color = "black", size = 15),
-                  plot.margin = unit(c(0.3, 0.3, 0.2, 0.2), "cm")) + theme_bw()
-# --
-
-type = "ar5" # input the covariance type
+type = "identity" # input the covariance type
 fileloc <- "/theory/"
 filenames <- list.files(paste0(fileloc, "output/", type , "/"))
 
